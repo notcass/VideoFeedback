@@ -1,0 +1,19 @@
+html,
+body {
+  background-color: #222;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+#sketch-holder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 4%;
+  position: relative;
+}
