@@ -1,5 +1,5 @@
 class Draggable {
-  constructor(x, y, w, h, type, r, g, b) {
+  constructor(x, y, w, h, type, r, g, b, vertices) {
     this.x = x;
     this.y = y;
     this.w = w;
@@ -12,11 +12,13 @@ class Draggable {
     if (r != null) {
       this.c = color(r, g, b);
     }
+    this.vertices = vertices;
   }
 
   show() {
     stroke(0);
     strokeWeight(1);
+    // noStroke();
     // Map Colors
     let a = map(this.x, -width / 2, width / 2, 0, 255);
     let b = map(this.y, -height / 2, height / 2, 0, 255);
@@ -34,6 +36,18 @@ class Draggable {
         break;
       case 'circle':
         circle(this.x, this.y, this.w);
+        break;
+      case 'irregular':
+        beginShape();
+        vertex(-144, -48);
+        vertex(-74, -106);
+        vertex(-55, -219);
+        vertex(40, -249);
+        vertex(103, -85);
+        vertex(-3, 30);
+        vertex(-124, 16);
+        vertex(-144, -48);
+        endShape();
         break;
     }
   }

@@ -15,8 +15,43 @@
   </head>
 
   <body>
+    <p id="zoomVal">ZoomVal: 0</p>
     <div id="sketch-holder">
       <script src="sketch.js"></script>
+      <input
+        id="zoom"
+        type="range"
+        min="-100"
+        max="100"
+        value="0"
+        step="0.5"
+        orient="vertical"
+      />
+    </div>
+
+    <div id="stuff-container">
+      <div class="stuff-holder">
+        <input id="xoff" type="range" min="-30" max="30" value="0" step="1" />
+        <br />
+        <p id="xoffVal">0</p>
+      </div>
+      <div class="stuff-holder">
+        <input id="yoff" type="range" min="-30" max="30" value="0" step="1" />
+        <br />
+        <p id="yoffVal">0</p>
+      </div>
+      <div class="stuff-holder">
+        <input
+          id="rot"
+          type="range"
+          min="-0.80"
+          max="0.80"
+          value="0"
+          step="0.01"
+        />
+        <br />
+        <p id="rotVal">0</p>
+      </div>
     </div>
   </body>
 </html>

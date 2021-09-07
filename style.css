@@ -15,5 +15,36 @@ canvas {
   justify-content: center;
   margin: 0 auto;
   margin-top: 4%;
+  right: 125px;
   position: relative;
+}
+
+#stuff-container {
+  display: block ruby;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.stuff-holder {
+  margin: auto;
+}
+
+p {
+  color: white;
+}
+
+input {
+  width: 250px;
+}
+
+#zoom {
+  position: relative;
+  left: 960px;
+  height: 200px;
+}
+#zoomVal {
+  display: block;
+  position: relative;
+  text-align: center;
+  /* top: 80px; */
 }

@@ -16,14 +16,9 @@
  *  QUALITY
  *    Need to see if we can reduce the quality of the projects
  *
- *
- *
- *
- * TODO:
- *
- *    Add fluctuation of zoom
  */
-let xoff, yoff, rot;
+let xoff, yoff, rot, zoom, colorPicker;
+let xoffVal, yoffVal, rotVal, zoomVal, thingVal;
 let prevImages = [];
 let counter = 0;
 let prex, prey;
@@ -34,41 +29,41 @@ let inc2 = 0.001;
 let staticFlag = true;
 let fluctuateFlag = false;
 const borderSize = 15;
-const latency = 5;
+const latency = 0;
 const things = [];
 
 function setup() {
-  createCanvas(400, 400).parent('sketch-holder');
+  // frameRate(6);
+  createCanvas(800, 800).parent('sketch-holder');
 
   background(0);
+  // background(255);
   stroke(255);
-  xoff = createSlider(-30, 30, 0, 1);
-  yoff = createSlider(-30, 30, 0, 1);
-  rot = createSlider(-PI / 4, PI / 4, 0, 0.01);
-
+  setupDom();
   //============= Object setups ============
-  setupStandard();
+  // setupStandard();
   // setupCross();
+  circle(width / 2, height / 2, 15);
 }
 
 function draw() {
   //=============== Rotation/Translation ==============
   translate(width / 2, height / 2);
-  rotate(rot.value());
+  rotate(rot.value);
 
   //=============== Static & Draggable Inputs ==============
   if (staticFlag) {
-    // rect(-120, -10, 90, 20);
     things.forEach((t) => {
       t.show();
       t.listener();
     });
   }
-  if (keyIsDown) {
-  }
+  // Irregular polygon
+  // beginShape();
+  // endShape();
 
   //=============== Displaying the image inside the canvas ==============
-  // let img = get(xoff.value(), yoff.value(), width, height);
+  // let img = get(xoff.value, yoff.value, width, height);
   // prevImages.push(img);
 
   // if (frameCount > latency) {
@@ -81,7 +76,7 @@ function draw() {
   //   );
   // }
   //=============== Displaying the image outside the canvas ======================
-  // let img = get(xoff.value(), yoff.value(), width, height);
+  // let img = get(xoff.value, yoff.value, width, height);
   // prevImages.push(img);
 
   // let margin = 200;
@@ -96,33 +91,47 @@ function draw() {
   //   );
   // }
   //=============== Displaying Outside -- VERY GOOD SETTINGS, NO IDEA WHAT I DID. THE SHAPES START TO DISTORT ======================
-  let img = get(xoff.value(), yoff.value(), width, height);
+  let img = get(xoff.value, yoff.value, width, height);
   prevImages.push(img);
 
-  let margin = 200;
+  // let margin = 200;
+  // if (frameCount > latency) {
+  //   image(
+  //     prevImages[counter - latency],
+  //     -width + margin,
+  //     -height + margin,
+  //     width * 2 - margin * 2,
+  //     height * 2 - margin * 2
+  //   );
+  // }
 
   if (frameCount > latency) {
+    // Variable ZOOMING
+    let zoomVal = parseInt(zoom.value);
     image(
       prevImages[counter - latency],
-      -width + margin,
-      -height + margin,
-      width * 2 - margin * 2,
-      height * 2 - margin * 2
+      -width / 2 - zoomVal,
+      -height / 2 - zoomVal,
+      width + zoomVal * 2,
+      height + zoomVal * 2
     );
   }
 
   //=============== Drawing with Mouse ==================
   if (mouseIsPressed && mouseX < width && mouseY < height) {
-    strokeWeight(1);
-    stroke(255);
+    strokeWeight(3);
+    noStroke();
+    // stroke(255);
     // stroke(0);
     // stroke(0, random(255), random(255));
     // fill(0);
     // fill(255);
-    fill(0, random(255), random(255));
+    // fill(0, random(255), random(255));
+    fill(random(255), random(255), random(255));
+    // fill(0, 100, 255);
 
     circle(mouseX - width / 2, mouseY - height / 2, 23);
-    // line(preX, preY, mouseX, mouseY);
+    // line( preX - width / 2, preY - width / 2, mouseX - width / 2, mouseY - width / 2);
     // line(mouseX, mouseY, random(width), random(height));
   }
   preX = mouseX;
@@ -132,61 +141,97 @@ function draw() {
   counter++;
   if (counter > 100) {
     prevImages = prevImages.slice(prevImages.length - latency);
-
     counter = latency;
   }
 
   //=============== Fluctuate Sliders with sin/cos ===============
-  // let xSliderVal = sin(angle1) * 10;
-  // let ySliderVal = cos(angle1) * 10;
-  // xoff.value(xSliderVal);
-  // yoff.value(ySliderVal);
-  // angle1 += 0.02;
+  // if (fluctuateFlag) {
+  //   let xSliderVal = round(sin(angle1));
+  //   let ySliderVal = round(cos(angle1));
+  //   xoff.value = xSliderVal;
+  //   yoff.value = ySliderVal;
+  //   angle1 += 0.02;
+  // }
 
   //=============== Fluctuate Sliders with noise ===============
   if (fluctuateFlag) {
-    let xn = noise(angle1);
-    let xSliderVal = map(xn, 0, 1, -10, 10);
-    xoff.value(xSliderVal);
+    // let xn = noise(angle1);
+    // let xSliderVal = map(xn, 0, 1, -10, 10);
+    // xoff.value = xSliderVal;
 
-    let yn = noise(angle1 + inc1 * 50);
-    let ySliderVal = map(yn, 0, 1, -10, 10);
-    yoff.value(ySliderVal);
+    // let yn = noise(angle1 + inc1 * 50);
+    // let ySliderVal = map(yn, 0, 1, -10, 10);
+    // yoff.value = ySliderVal;
 
-    // let rn = noise(angle2);
+    let rn = noise(angle1);
     // let rSliderVal = map(rn, 0, 1, -PI / 4, PI / 4);
-    // rot.value(rSliderVal);
+    let rSliderVal = map(rn, 0, 1, -0.05, 0.05);
+    rot.value = rSliderVal;
 
     angle1 += inc1;
     angle2 += inc2;
   }
-}
 
-function keyPressed() {
-  if (key === 'q') isLooping() ? noLoop() : loop();
-  if (key === '1') {
-    console.log(mouseX, mouseY);
-  }
-  if (key === 's') staticFlag = !staticFlag;
-  if (key === 'f') fluctuateFlag = !fluctuateFlag;
-
-  if (key === 'ArrowRight') things[0].x += 5;
-  if (key === 'ArrowLeft') things[0].x -= 5;
-  if (key === 'ArrowDown') things[0].y += 5;
-  if (key === 'ArrowUp') things[0].y -= 5;
+  //================ Extra Stuff ====================
+  updateDom();
+  // if (keyIsPressed) {
+  //   if (key === 'ArrowRight') rot.value = parseFloat(rot.value) + 0.01;
+  //   if (key === 'ArrowLeft') rot.value = parseFloat(rot.value) - 0.01;
+  //   if (key === 'ArrowDown') zoom.value = parseInt(zoom.value) - 1;
+  //   if (key === 'ArrowUp') zoom.value = parseInt(zoom.value) + 1;
+  // }
 }
 
 //======================= Draggable setups =========================
 
 function setupStandard() {
-  // things.push(new Draggable(-60, -100, 25, 80, 'rect', 255, 255, 255));
-  // things.push(new Draggable(50, -100, 90, 15, 'rect', 150, 10, 200));
-  // things.push(new Draggable(90, 150, 25, 0, 'circle', 150, 10, 200));
+  things.push(new Draggable(-260, -150, 145, 80, 'circle', 255, 255, 255));
+  things.push(new Draggable(250, -200, 90, 15, 'circle', 150, 10, 200));
+  things.push(new Draggable(90, 150, 25, 0, 'circle', 150, 10, 200));
 
-  things.push(new Draggable(-width / 2, -100, 25, 80, 'rect', 255, 255, 255));
+  // things.push(new Draggable(0, 0, 0, 0, 'irregular', 150, 10, 200));
+
+  // things.push(new Draggable(-width / 2, -100, 25, 80, 'rect', 255, 255, 255));
 }
 
 function setupCross() {
   things.push(new Draggable(-width / 2, -25, width, 50, 'rect'));
   things.push(new Draggable(-25, -height / 2, 50, height, 'rect'));
+}
+
+//======================= Utility Stuff =========================
+function setupDom() {
+  xoff = document.getElementById('xoff');
+  yoff = document.getElementById('yoff');
+  rot = document.getElementById('rot');
+  zoom = document.getElementById('zoom');
+  xoffVal = document.getElementById('xoffVal');
+  yoffVal = document.getElementById('yoffVal');
+  rotVal = document.getElementById('rotVal');
+  zoomVal = document.getElementById('zoomVal');
+  xoff.value = 0;
+  yoff.value = 0;
+  rot.value = 0;
+  zoom.value = 0;
+}
+
+function updateDom() {
+  xoffVal.innerText = xoff.value;
+  yoffVal.innerText = yoff.value;
+  rotVal.innerText = rot.value;
+  zoomVal.innerText = `ZoomVal: ${zoom.value}`;
+}
+
+function keyPressed() {
+  if (key === 'q') isLooping() ? noLoop() : loop();
+  if (key === 'r') redraw();
+  if (key === '1') {
+    console.log(mouseX, mouseY);
+  }
+  if (key === 's') staticFlag = !staticFlag;
+  if (key === 'f') fluctuateFlag = !fluctuateFlag;
+  if (key === 'ArrowRight') rot.value = parseFloat(rot.value) + 0.01;
+  if (key === 'ArrowLeft') rot.value = parseFloat(rot.value) - 0.01;
+  if (key === 'ArrowDown') zoom.value = parseInt(zoom.value) - 1;
+  if (key === 'ArrowUp') zoom.value = parseFloat(zoom.value) + 1;
 }
