@@ -1,4 +1,28 @@
 /// <reference path="libraries/p5.global-mode.d.ts" />
+/**
+ *  ========= Closed loop video feedback =========
+ *
+ *
+ *                 --REAL WORLD VARIABLES--
+ *  Size & position of capture:
+ *    are we capturing the whole image or just a part of it
+ *
+ *  Size & position of projection
+ *    are we projecting this inside the bounds of the canvas, or outside
+ *
+ *  Latency
+ *    Faked latency might help produce more trippy illusions
+ *
+ *  QUALITY
+ *    Need to see if we can reduce the quality of the projects
+ *
+ *
+ *
+ *
+ * TODO:
+ *
+ *    Add fluctuation of zoom
+ */
 let xoff, yoff, rot;
 let prevImages = [];
 let counter = 0;
@@ -9,39 +33,25 @@ let inc1 = 0.01;
 let inc2 = 0.001;
 let staticFlag = true;
 let fluctuateFlag = false;
-const borderSize = 5;
-const latency = 1;
+const borderSize = 15;
+const latency = 5;
 const things = [];
-/**
- * TODO: Add a class for a random shape at a random spot
- *       Instead of drawing manually in the Static Inputs section
- */
 
-function preload() {}
 function setup() {
   createCanvas(400, 400).parent('sketch-holder');
 
-  // background(0);
-  background(18);
+  background(0);
   stroke(255);
   xoff = createSlider(-30, 30, 0, 1);
   yoff = createSlider(-30, 30, 0, 1);
   rot = createSlider(-PI / 4, PI / 4, 0, 0.01);
-  things.push(new Draggable(-120, -100, 20, 90));
+
+  //============= Object setups ============
+  setupStandard();
+  // setupCross();
 }
 
 function draw() {
-  //=============== Drawing with Mouse ==================
-  // if (mouseIsPressed && mouseX < width && mouseY < height) {
-  //   stroke(255);
-  //   stroke(0, random(255), random(255));
-  //   strokeWeight(10);
-  //   line(preX, preY, mouseX, mouseY);
-  //   // line(mouseX, mouseY, random(width), random(height));
-  // }
-  // preX = mouseX;
-  // preY = mouseY;
-
   //=============== Rotation/Translation ==============
   translate(width / 2, height / 2);
   rotate(rot.value());
@@ -54,32 +64,72 @@ function draw() {
       t.listener();
     });
   }
+  if (keyIsDown) {
+  }
 
   //=============== Displaying the image inside the canvas ==============
-  // let img = get(
-  //   xoff.value() - width / 2,
-  //   yoff.value() - height / 2,
-  //   xoff.value() + width / 2,
-  //   yoff.value() + height / 2
-  // );
+  // let img = get(xoff.value(), yoff.value(), width, height);
+  // prevImages.push(img);
 
-  // This is the get() that works with translate
+  // if (frameCount > latency) {
+  //   image(
+  //     prevImages[counter - latency],
+  //     -width / 2 + borderSize,
+  //     -height / 2 + borderSize,
+  //     width - borderSize * 2,
+  //     height - borderSize * 2
+  //   );
+  // }
+  //=============== Displaying the image outside the canvas ======================
+  // let img = get(xoff.value(), yoff.value(), width, height);
+  // prevImages.push(img);
+
+  // let margin = 200;
+
+  // if (frameCount > latency) {
+  //   image(
+  //     prevImages[counter - latency],
+  //     -width + 150,
+  //     -height + 150,
+  //     width * 2 - 300,
+  //     height * 2 - 300
+  //   );
+  // }
+  //=============== Displaying Outside -- VERY GOOD SETTINGS, NO IDEA WHAT I DID. THE SHAPES START TO DISTORT ======================
   let img = get(xoff.value(), yoff.value(), width, height);
   prevImages.push(img);
+
+  let margin = 200;
 
   if (frameCount > latency) {
     image(
       prevImages[counter - latency],
-      -width / 2 + borderSize,
-      -height / 2 + borderSize,
-      width - borderSize * 2,
-      height - borderSize * 2
+      -width + margin,
+      -height + margin,
+      width * 2 - margin * 2,
+      height * 2 - margin * 2
     );
   }
 
-  counter++;
+  //=============== Drawing with Mouse ==================
+  if (mouseIsPressed && mouseX < width && mouseY < height) {
+    strokeWeight(1);
+    stroke(255);
+    // stroke(0);
+    // stroke(0, random(255), random(255));
+    // fill(0);
+    // fill(255);
+    fill(0, random(255), random(255));
 
-  // If array length > 100, make new array
+    circle(mouseX - width / 2, mouseY - height / 2, 23);
+    // line(preX, preY, mouseX, mouseY);
+    // line(mouseX, mouseY, random(width), random(height));
+  }
+  preX = mouseX;
+  preY = mouseY;
+
+  //=============== Latency Simulating ======================
+  counter++;
   if (counter > 100) {
     prevImages = prevImages.slice(prevImages.length - latency);
 
@@ -119,4 +169,24 @@ function keyPressed() {
   }
   if (key === 's') staticFlag = !staticFlag;
   if (key === 'f') fluctuateFlag = !fluctuateFlag;
+
+  if (key === 'ArrowRight') things[0].x += 5;
+  if (key === 'ArrowLeft') things[0].x -= 5;
+  if (key === 'ArrowDown') things[0].y += 5;
+  if (key === 'ArrowUp') things[0].y -= 5;
+}
+
+//======================= Draggable setups =========================
+
+function setupStandard() {
+  // things.push(new Draggable(-60, -100, 25, 80, 'rect', 255, 255, 255));
+  // things.push(new Draggable(50, -100, 90, 15, 'rect', 150, 10, 200));
+  // things.push(new Draggable(90, 150, 25, 0, 'circle', 150, 10, 200));
+
+  things.push(new Draggable(-width / 2, -100, 25, 80, 'rect', 255, 255, 255));
+}
+
+function setupCross() {
+  things.push(new Draggable(-width / 2, -25, width, 50, 'rect'));
+  things.push(new Draggable(-25, -height / 2, 50, height, 'rect'));
 }
