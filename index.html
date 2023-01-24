@@ -31,9 +31,16 @@
 
     <div id="stuff-container">
       <div class="stuff-holder">
-        <input id="xoff" type="range" min="-30" max="30" value="0" step="1" />
+        <input
+          id="rot"
+          type="range"
+          min="-0.2"
+          max="0.2"
+          value="0"
+          step="0.001"
+        />
         <br />
-        <p id="xoffVal">0</p>
+        <p id="rotVal">0</p>
       </div>
       <div class="stuff-holder">
         <input id="yoff" type="range" min="-30" max="30" value="0" step="1" />
@@ -41,17 +48,11 @@
         <p id="yoffVal">0</p>
       </div>
       <div class="stuff-holder">
-        <input
-          id="rot"
-          type="range"
-          min="-0.80"
-          max="0.80"
-          value="0"
-          step="0.01"
-        />
+        <input id="xoff" type="range" min="-30" max="30" value="0" step="1" />
         <br />
-        <p id="rotVal">0</p>
+        <p id="xoffVal">0</p>
       </div>
     </div>
+    <p id="fps">0</p>
   </body>
 </html>

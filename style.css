@@ -39,7 +39,8 @@ input {
 
 #zoom {
   position: relative;
-  left: 960px;
+  /* left: 2760px; */
+  left: 1260px;
   height: 200px;
 }
 #zoomVal {
@@ -47,4 +48,9 @@ input {
   position: relative;
   text-align: center;
   /* top: 80px; */
+}
+
+#fps {
+  font-size: 24px;
+  text-align: center;
 }
